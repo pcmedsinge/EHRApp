@@ -26,7 +26,7 @@ The Docker configuration includes **live code reloading**:
 
 **Backend (FastAPI):**
 ```yaml
-# In docker-compose.full.yml
+# In docker-compose.yml
 backend:
   volumes:
     - ./backend:/app  # Maps your local code to container
@@ -61,10 +61,10 @@ frontend-dev:
 
 ```bash
 # Start all services
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml up -d
 
 # View logs (optional)
-docker-compose -f docker-compose.full.yml logs -f
+docker-compose -f docker-compose.yml logs -f
 ```
 
 ### Step 2: Edit code normally
@@ -127,7 +127,7 @@ docker exec -it ehr_backend alembic revision --autogenerate -m "Add new patient 
 docker exec -it ehr_backend alembic upgrade head
 
 # Or restart backend (migrations run automatically on startup)
-docker-compose -f docker-compose.full.yml restart backend
+docker-compose -f docker-compose.yml restart backend
 ```
 
 ### Rolling back migrations
@@ -158,7 +158,7 @@ pandas==2.0.0
 **Step 2:** Rebuild backend container
 ```bash
 # Rebuild and restart backend
-docker-compose -f docker-compose.full.yml up -d --build backend
+docker-compose -f docker-compose.yml up -d --build backend
 ```
 
 **Alternative: Install without rebuild**
@@ -181,7 +181,7 @@ docker exec -it ehr_frontend_dev npm install axios
 # Option 2: Install locally and rebuild
 cd frontend
 npm install axios
-docker-compose -f docker-compose.full.yml restart frontend-dev
+docker-compose -f docker-compose.yml restart frontend-dev
 ```
 
 **The package.json is updated automatically in your local folder**
@@ -263,10 +263,10 @@ docker exec -it ehr_frontend_dev npm run test:watch
 **View logs:**
 ```bash
 # Real-time logs
-docker-compose -f docker-compose.full.yml logs -f backend
+docker-compose -f docker-compose.yml logs -f backend
 
 # Last 100 lines
-docker-compose -f docker-compose.full.yml logs --tail=100 backend
+docker-compose -f docker-compose.yml logs --tail=100 backend
 ```
 
 **Interactive debugging:**
@@ -289,7 +289,7 @@ exit
 **View logs:**
 ```bash
 # Real-time logs
-docker-compose -f docker-compose.full.yml logs -f frontend-dev
+docker-compose -f docker-compose.yml logs -f frontend-dev
 ```
 
 **Access container:**
@@ -328,10 +328,10 @@ SELECT * FROM patients LIMIT 5;
 
 ```bash
 # Stop containers
-docker-compose -f docker-compose.full.yml down -v
+docker-compose -f docker-compose.yml down -v
 
 # Start fresh (migrations run automatically)
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml up -d
 
 # Seed data
 docker exec -it ehr_backend python -m app.db.seed_data
@@ -368,7 +368,7 @@ docker exec -it ehr_backend alembic history
 
 ```bash
 # Rebuild frontend container
-docker-compose -f docker-compose.full.yml up -d --build frontend-dev
+docker-compose -f docker-compose.yml up -d --build frontend-dev
 
 # Or clear npm cache
 docker exec -it ehr_frontend_dev npm cache clean --force
@@ -416,7 +416,7 @@ You **rarely** need to change Docker files. Only change when:
 
 **Normal npm packages** don't need Dockerfile changes, just update package.json
 
-### Update docker-compose.full.yml IF:
+### Update docker-compose.yml IF:
 - Adding new service (e.g., Redis cache, Elasticsearch)
 - Changing ports
 - Adding environment variables
@@ -444,7 +444,7 @@ git push
 git pull
 
 # Restart containers to pick up changes
-docker-compose -f docker-compose.full.yml restart
+docker-compose -f docker-compose.yml restart
 
 # If new migrations exist
 docker exec -it ehr_backend alembic upgrade head
@@ -496,7 +496,7 @@ docker exec -it ehr_backend alembic upgrade head
 
 ### If you add new services (e.g., Redis):
 
-**Step 1:** Add to docker-compose.full.yml
+**Step 1:** Add to docker-compose.yml
 ```yaml
 redis:
   image: redis:7-alpine

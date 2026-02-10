@@ -156,7 +156,7 @@ EHRApp/
 ├── DOCKER_DEPLOYMENT.md                   # Technical documentation
 ├── DOCKER_ARCHITECTURE.txt                # Visual diagrams
 │
-├── docker-compose.full.yml                # Docker configuration
+├── docker-compose.yml                # Docker configuration
 ├── docker-deploy.sh                       # Quick deployment script
 ├── docker-deploy-prod.sh                  # Production deployment
 │
@@ -223,13 +223,13 @@ docker exec -it ehr_backend alembic upgrade head
 ### Workflow 4: Troubleshooting (minutes)
 ```bash
 # Check logs
-docker-compose -f docker-compose.full.yml logs -f backend
+docker-compose -f docker-compose.yml logs -f backend
 
 # Restart service
-docker-compose -f docker-compose.full.yml restart backend
+docker-compose -f docker-compose.yml restart backend
 
 # Complete reset (if really broken)
-docker-compose -f docker-compose.full.yml down -v
+docker-compose -f docker-compose.yml down -v
 ./docker-deploy.sh
 ```
 

@@ -103,7 +103,7 @@ EHRApp/
 ├── backend/                    # Backend source code
 ├── frontend/                   # Frontend source code
 ├── config/                     # Configuration files
-├── docker-compose.full.yml     # Docker services configuration
+├── docker-compose.yml     # Docker services configuration
 ├── docker-deploy.sh            # Deployment script
 └── docs/deployment/            # This documentation folder
 ```
@@ -137,7 +137,7 @@ cd EHRApp
 ✅ backend/           (except venv, __pycache__, .env)
 ✅ frontend/          (except node_modules, dist)
 ✅ config/
-✅ docker-compose.full.yml
+✅ docker-compose.yml
 ✅ docker-deploy.sh
 ✅ docs/              (for reference)
 ✅ alembic.ini        (if exists)
@@ -198,7 +198,7 @@ After deployment, verify everything works:
 
 ```bash
 # Check all services
-docker-compose -f docker-compose.full.yml ps
+docker-compose -f docker-compose.yml ps
 
 # Should see all services "Up":
 ✅ ehr_backend
@@ -222,9 +222,9 @@ docker-compose -f docker-compose.full.yml ps
 If you encounter issues:
 
 1. Check [QUICK_REFERENCE.md](QUICK_REFERENCE.md) troubleshooting section
-2. Review logs: `docker-compose -f docker-compose.full.yml logs -f`
-3. Try restart: `docker-compose -f docker-compose.full.yml restart`
-4. Complete reset: `docker-compose -f docker-compose.full.yml down -v && ./docker-deploy.sh`
+2. Review logs: `docker-compose -f docker-compose.yml logs -f`
+3. Try restart: `docker-compose -f docker-compose.yml restart`
+4. Complete reset: `docker-compose -f docker-compose.yml down -v && ./docker-deploy.sh`
 
 ---
 

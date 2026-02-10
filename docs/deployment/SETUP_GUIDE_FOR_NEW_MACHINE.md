@@ -219,7 +219,7 @@ chmod +x docker-deploy.sh
 
 **For Windows PowerShell:**
 ```powershell
-docker-compose -f docker-compose.full.yml up -d --build
+docker-compose -f docker-compose.yml up -d --build
 ```
 
 ---
@@ -323,7 +323,7 @@ http://localhost:3000
 **Solution:**
 ```bash
 # Stop all containers
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.yml down
 
 # Check what's using the port
 # Windows:
@@ -371,7 +371,7 @@ sudo systemctl start docker
 
 ---
 
-### Issue 5: "Cannot find docker-compose.full.yml"
+### Issue 5: "Cannot find docker-compose.yml"
 
 **Solution:**
 - Make sure you are in the correct folder
@@ -383,7 +383,7 @@ sudo systemctl start docker
   # Mac/Linux
   ls
   ```
-- You should see: `docker-compose.full.yml` in the list
+- You should see: `docker-compose.yml` in the list
 - If not, navigate to the correct folder:
   ```bash
   cd /path/to/EHRApp
@@ -400,7 +400,7 @@ sudo systemctl start docker
 # 1. Make sure Docker Desktop is running
 # 2. Open Terminal in EHRApp folder
 # 3. Run:
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml up -d
 
 # Wait 30 seconds, then access http://localhost:3000
 ```
@@ -412,7 +412,7 @@ docker-compose -f docker-compose.full.yml up -d
 **When you're done:**
 ```bash
 # In Terminal (in EHRApp folder):
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.yml down
 ```
 
 **Or just close Docker Desktop** (it will stop all containers)
@@ -423,11 +423,11 @@ docker-compose -f docker-compose.full.yml down
 
 ```bash
 # See all logs
-docker-compose -f docker-compose.full.yml logs -f
+docker-compose -f docker-compose.yml logs -f
 
 # See specific service logs
-docker-compose -f docker-compose.full.yml logs -f backend
-docker-compose -f docker-compose.full.yml logs -f frontend-dev
+docker-compose -f docker-compose.yml logs -f backend
+docker-compose -f docker-compose.yml logs -f frontend-dev
 
 # Press Ctrl+C to stop viewing logs
 ```
@@ -439,10 +439,10 @@ docker-compose -f docker-compose.full.yml logs -f frontend-dev
 **If something isn't working:**
 ```bash
 # Restart all services
-docker-compose -f docker-compose.full.yml restart
+docker-compose -f docker-compose.yml restart
 
 # Restart specific service
-docker-compose -f docker-compose.full.yml restart backend
+docker-compose -f docker-compose.yml restart backend
 ```
 
 ---
@@ -452,7 +452,7 @@ docker-compose -f docker-compose.full.yml restart backend
 **Nuclear option - wipes everything and starts fresh:**
 ```bash
 # Stop and remove everything including data
-docker-compose -f docker-compose.full.yml down -v
+docker-compose -f docker-compose.yml down -v
 
 # Start fresh
 ./docker-deploy.sh
@@ -468,26 +468,26 @@ docker-compose -f docker-compose.full.yml down -v
 
 ```bash
 # Stop containers first
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.yml down
 
 # Backup database
 docker run --rm -v ehr_postgres_data:/data -v $(pwd):/backup ubuntu tar czf /backup/ehr_backup.tar.gz /data
 
 # Start containers again
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml up -d
 ```
 
 ### Restore backup
 
 ```bash
 # Stop containers
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.yml down
 
 # Restore database
 docker run --rm -v ehr_postgres_data:/data -v $(pwd):/backup ubuntu tar xzf /backup/ehr_backup.tar.gz -C /
 
 # Start containers
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml up -d
 ```
 
 ---
@@ -504,7 +504,7 @@ docker-compose -f docker-compose.full.yml up -d
 cd /path/to/EHRApp
 
 # Stop application
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.yml down
 
 # Get latest code
 git pull origin main
@@ -561,7 +561,7 @@ Example: `http://192.168.1.100:3000`
 
 ### Check if services are running
 ```bash
-docker-compose -f docker-compose.full.yml ps
+docker-compose -f docker-compose.yml ps
 ```
 
 You should see all services with "Up" status:
@@ -590,10 +590,10 @@ docker exec ehr_postgres pg_isready
 ### Get detailed logs
 ```bash
 # All services
-docker-compose -f docker-compose.full.yml logs --tail=100
+docker-compose -f docker-compose.yml logs --tail=100
 
 # Specific service (last 50 lines)
-docker-compose -f docker-compose.full.yml logs --tail=50 backend
+docker-compose -f docker-compose.yml logs --tail=50 backend
 ```
 
 ---

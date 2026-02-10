@@ -95,27 +95,27 @@ chmod +x docker-deploy-prod.sh
 
 ### Start Services
 ```bash
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml up -d
 ```
 
 ### Stop Services
 ```bash
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.yml down
 ```
 
 ### View Logs
 ```bash
 # All services
-docker-compose -f docker-compose.full.yml logs -f
+docker-compose -f docker-compose.yml logs -f
 
 # Specific service
-docker-compose -f docker-compose.full.yml logs -f backend
-docker-compose -f docker-compose.full.yml logs -f frontend-dev
+docker-compose -f docker-compose.yml logs -f backend
+docker-compose -f docker-compose.yml logs -f frontend-dev
 ```
 
 ### Restart a Service
 ```bash
-docker-compose -f docker-compose.full.yml restart backend
+docker-compose -f docker-compose.yml restart backend
 ```
 
 ### Access Container Shell
@@ -144,8 +144,8 @@ docker exec -it ehr_backend python -m app.db.seed_data
 
 ### Reset Everything
 ```bash
-docker-compose -f docker-compose.full.yml down -v
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml down -v
+docker-compose -f docker-compose.yml up -d
 ```
 
 ## Data Persistence
@@ -188,26 +188,26 @@ ports:
 ### Container Won't Start
 ```bash
 # Check logs
-docker-compose -f docker-compose.full.yml logs backend
+docker-compose -f docker-compose.yml logs backend
 
 # Rebuild container
-docker-compose -f docker-compose.full.yml build --no-cache backend
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml build --no-cache backend
+docker-compose -f docker-compose.yml up -d
 ```
 
 ### Database Connection Issues
 ```bash
 # Check database is running
-docker-compose -f docker-compose.full.yml ps postgres
+docker-compose -f docker-compose.yml ps postgres
 
 # Check database logs
-docker-compose -f docker-compose.full.yml logs postgres
+docker-compose -f docker-compose.yml logs postgres
 ```
 
 ## Performance Optimization
 
 ### For Development
-The default `docker-compose.full.yml` uses:
+The default `docker-compose.yml` uses:
 - Volume mounts for hot-reload
 - Development builds
 - Debug logging enabled

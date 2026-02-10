@@ -25,30 +25,30 @@ cd EHRApp
 
 ```bash
 # Start all services
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml up -d
 
 # Stop all services
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.yml down
 
 # Restart specific service
-docker-compose -f docker-compose.full.yml restart backend
+docker-compose -f docker-compose.yml restart backend
 
 # View status
-docker-compose -f docker-compose.full.yml ps
+docker-compose -f docker-compose.yml ps
 ```
 
 ### Viewing Logs
 
 ```bash
 # All services
-docker-compose -f docker-compose.full.yml logs -f
+docker-compose -f docker-compose.yml logs -f
 
 # Specific service
-docker-compose -f docker-compose.full.yml logs -f backend
-docker-compose -f docker-compose.full.yml logs -f frontend-dev
+docker-compose -f docker-compose.yml logs -f backend
+docker-compose -f docker-compose.yml logs -f frontend-dev
 
 # Last 50 lines
-docker-compose -f docker-compose.full.yml logs --tail=50 backend
+docker-compose -f docker-compose.yml logs --tail=50 backend
 ```
 
 ### Database Operations
@@ -91,20 +91,20 @@ docker exec -it ehr_frontend_dev npm run test
 
 ```bash
 # Rebuild all images
-docker-compose -f docker-compose.full.yml build
+docker-compose -f docker-compose.yml build
 
 # Rebuild specific service
-docker-compose -f docker-compose.full.yml build backend
+docker-compose -f docker-compose.yml build backend
 
 # Rebuild and restart
-docker-compose -f docker-compose.full.yml up -d --build
+docker-compose -f docker-compose.yml up -d --build
 ```
 
 ### Emergency Reset
 
 ```bash
 # Nuclear option - wipes everything
-docker-compose -f docker-compose.full.yml down -v
+docker-compose -f docker-compose.yml down -v
 
 # Start fresh
 ./docker-deploy.sh
@@ -129,7 +129,7 @@ docker-compose -f docker-compose.full.yml down -v
 ### Issue: Port already in use
 ```bash
 # Stop containers
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.yml down
 
 # Find and kill process using port
 sudo lsof -i :3000  # Mac/Linux
@@ -139,32 +139,32 @@ netstat -ano | findstr :3000  # Windows
 ### Issue: Container won't start
 ```bash
 # View logs
-docker-compose -f docker-compose.full.yml logs service-name
+docker-compose -f docker-compose.yml logs service-name
 
 # Rebuild container
-docker-compose -f docker-compose.full.yml build --no-cache service-name
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml build --no-cache service-name
+docker-compose -f docker-compose.yml up -d
 ```
 
 ### Issue: Database connection error
 ```bash
 # Check database is running
-docker-compose -f docker-compose.full.yml ps postgres
+docker-compose -f docker-compose.yml ps postgres
 
 # Restart database
-docker-compose -f docker-compose.full.yml restart postgres
+docker-compose -f docker-compose.yml restart postgres
 
 # Wait 10 seconds, then restart backend
-docker-compose -f docker-compose.full.yml restart backend
+docker-compose -f docker-compose.yml restart backend
 ```
 
 ### Issue: Changes not appearing
 ```bash
 # Backend: Restart to reload code
-docker-compose -f docker-compose.full.yml restart backend
+docker-compose -f docker-compose.yml restart backend
 
 # Frontend: Clear cache and rebuild
-docker-compose -f docker-compose.full.yml restart frontend-dev
+docker-compose -f docker-compose.yml restart frontend-dev
 ```
 
 ---
@@ -177,7 +177,7 @@ docker-compose -f docker-compose.full.yml restart frontend-dev
 echo "pandas==2.0.0" >> backend/requirements.txt
 
 # 2. Rebuild backend
-docker-compose -f docker-compose.full.yml up -d --build backend
+docker-compose -f docker-compose.yml up -d --build backend
 ```
 
 ### Node Package
@@ -227,13 +227,13 @@ docker exec ehr_orthanc_postgres pg_dump -U orthanc orthanc > backup_orthanc_$(d
 ### Restore
 ```bash
 # Stop containers
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.yml down
 
 # Remove volumes
 docker volume rm ehr_postgres_data
 
 # Start containers (creates fresh database)
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml up -d
 
 # Wait for database to be ready
 sleep 10
@@ -252,7 +252,7 @@ docker exec -i ehr_postgres psql -U ehr_user ehr_db < backup_20260210.sql
 git pull
 
 # Restart services
-docker-compose -f docker-compose.full.yml restart
+docker-compose -f docker-compose.yml restart
 
 # Apply any new migrations
 docker exec -it ehr_backend alembic upgrade head
@@ -289,7 +289,7 @@ nano .env.production
 
 ```bash
 # Check all services
-docker-compose -f docker-compose.full.yml ps
+docker-compose -f docker-compose.yml ps
 
 # Check specific service health
 curl http://localhost:8000/docs  # Backend
