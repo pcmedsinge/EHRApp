@@ -1,0 +1,229 @@
+version: '3.8'
+
+services:
+  # ==========================================================================
+  # EHR PostgreSQL Database
+  # ==========================================================================
+  postgres:
+    image: postgres:15.10-alpine
+    container_name: ehr_postgres
+    environment:
+      POSTGRES_DB: ehr_db
+      POSTGRES_USER: ehr_user
+      POSTGRES_PASSWORD: ehr_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ehr-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ehr_user -d ehr_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ==========================================================================
+  # Orthanc PostgreSQL Database (separate from EHR DB)
+  # ==========================================================================
+  orthanc_postgres:
+    image: postgres:15.10-alpine
+    container_name: ehr_orthanc_postgres
+    environment:
+      POSTGRES_DB: orthanc
+      POSTGRES_USER: orthanc
+      POSTGRES_PASSWORD: orthanc
+    ports:
+      - "5434:5432"
+    volumes:
+      - orthanc_postgres_data:/var/lib/postgresql/data
+    networks:
+      - ehr-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orthanc -d orthanc"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ==========================================================================
+  # FastAPI Backend
+  # ==========================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ehr_backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      orthanc:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      # Database
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: ehr_user
+      DATABASE_PASSWORD: ehr_password
+      DATABASE_NAME: ehr_db
+      DATABASE_URL: postgresql+asyncpg://ehr_user:ehr_password@postgres:5432/ehr_db
+      
+      # Security
+      SECRET_KEY: your-secret-key-change-in-production
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      
+      # Orthanc
+      ORTHANC_URL: http://orthanc:8042
+      ORTHANC_USERNAME: orthanc
+      ORTHANC_PASSWORD: orthanc
+      ORTHANC_DICOMWEB_URL: http://orthanc:8042/dicom-web
+      
+      # OHIF
+      OHIF_VIEWER_URL: http://localhost:3001
+      
+      # File Upload
+      MAX_DICOM_FILE_SIZE_MB: 100
+      
+      # CORS
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:3001,http://localhost
+    volumes:
+      - ./backend:/app
+    networks:
+      - ehr-network
+    restart: unless-stopped
+
+  # ==========================================================================
+  # React Frontend (Development Mode with Hot Reload)
+  # ==========================================================================
+  frontend-dev:
+    image: node:18-alpine
+    container_name: ehr_frontend_dev
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Use container's node_modules
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+      - VITE_OHIF_VIEWER_URL=http://localhost:3001
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    networks:
+      - ehr-network
+    restart: unless-stopped
+
+  # ==========================================================================
+  # Orthanc PACS Server (with PostgreSQL plugin)
+  # ==========================================================================
+  orthanc:
+    image: orthancteam/orthanc:25.12.3
+    container_name: ehr_orthanc
+    depends_on:
+      orthanc_postgres:
+        condition: service_healthy
+    ports:
+      - "8042:8042"  # REST API & Web UI
+      - "4242:4242"  # DICOM protocol
+    environment:
+      # Basic Configuration
+      ORTHANC__NAME: "EHR_PACS"
+      ORTHANC__HTTP_PORT: "8042"
+      ORTHANC__DICOM_AET: "EHRPACS"
+      ORTHANC__DICOM_PORT: "4242"
+      
+      # Authentication
+      ORTHANC__AUTHENTICATION_ENABLED: "true"
+      ORTHANC__REGISTERED_USERS: |
+        {
+          "orthanc": "orthanc"
+        }
+      
+      # PostgreSQL Configuration
+      ORTHANC__POSTGRESQL__ENABLE_INDEX: "true"
+      ORTHANC__POSTGRESQL__ENABLE_STORAGE: "true"
+      ORTHANC__POSTGRESQL__HOST: "orthanc_postgres"
+      ORTHANC__POSTGRESQL__PORT: "5432"
+      ORTHANC__POSTGRESQL__DATABASE: "orthanc"
+      ORTHANC__POSTGRESQL__USERNAME: "orthanc"
+      ORTHANC__POSTGRESQL__PASSWORD: "orthanc"
+      ORTHANC__POSTGRESQL__MAX_CONNECTION_RETRIES: "10"
+      ORTHANC__POSTGRESQL__CONNECTION_RETRY_INTERVAL: "5"
+      
+      # DICOMweb Plugin
+      ORTHANC__DICOM_WEB__ENABLE: "true"
+      ORTHANC__DICOM_WEB__ROOT: "/dicom-web/"
+      ORTHANC__DICOM_WEB__ENABLE_WADO: "true"
+      ORTHANC__DICOM_WEB__WADO_ROOT: "/wado"
+      ORTHANC__DICOM_WEB__SSL: "false"
+      ORTHANC__DICOM_WEB__STOW_RS__ENABLE: "true"
+      ORTHANC__DICOM_WEB__WADO_RS__ENABLE: "true"
+      ORTHANC__DICOM_WEB__QIDO_RS__ENABLE: "true"
+      
+      # CORS for OHIF Viewer
+      ORTHANC__HTTP_ENABLE_CORS: "true"
+      ORTHANC__HTTP_CORS_ORIGINS: "*"
+      
+      # Storage Configuration
+      ORTHANC__MAXIMUM_STORAGE_SIZE: "0"  # 0 = unlimited
+      ORTHANC__MAXIMUM_PATIENT_COUNT: "0"  # 0 = unlimited
+      
+      # Performance
+      ORTHANC__CONCURRENT_JOBS: "4"
+      ORTHANC__HTTP_THREADS_COUNT: "50"
+      
+      # Logging
+      ORTHANC__HTTP_VERBOSE: "false"
+      ORTHANC__DICOM_VERBOSE: "false"
+    volumes:
+      - orthanc_data:/var/lib/orthanc/db
+    networks:
+      - ehr-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8042/system || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================================================
+  # OHIF Viewer (Web-based DICOM Viewer)
+  # ==========================================================================
+  ohif-viewer:
+    image: ohif/viewer:v4.12.51.21579
+    container_name: ehr_ohif
+    depends_on:
+      - orthanc
+    ports:
+      - "3001:80"
+    environment:
+      - APP_CONFIG=/usr/share/nginx/html/app-config.js
+    volumes:
+      - ./config/ohif-config.js:/usr/share/nginx/html/app-config.js:ro
+    networks:
+      - ehr-network
+    restart: unless-stopped
+
+# ==========================================================================
+# Networks
+# ==========================================================================
+networks:
+  ehr-network:
+    driver: bridge
+    name: ehr-network
+
+# ==========================================================================
+# Volumes
+# ==========================================================================
+volumes:
+  postgres_data:
+    name: ehr_postgres_data
+  orthanc_postgres_data:
+    name: ehr_orthanc_postgres_data
+  orthanc_data:
+    name: ehr_orthanc_data

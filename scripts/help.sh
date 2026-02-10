@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# =============================================================================
+# EHR Application - Quick Reference Card
+# =============================================================================
+# Print a quick reference of all commands and URLs
+# =============================================================================
+
+# Colors
+CYAN='\033[0;36m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+echo ""
+echo -e "${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║          EHR Application - Quick Reference                ║${NC}"
+echo -e "${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
+echo ""
+echo -e "${BLUE}🚀 STARTUP${NC}"
+echo "────────────────────────────────────────────────"
+echo "  First-time setup:     ./setup.sh"
+echo "  Start everything:     ./dev-start.sh"
+echo "  Start backend only:   ./dev-start.sh --backend-only"
+echo "  Start frontend only:  ./dev-start.sh --frontend-only"
+echo ""
+echo -e "${BLUE}🛑 SHUTDOWN${NC}"
+echo "────────────────────────────────────────────────"
+echo "  Stop services:        ./dev-stop.sh"
+echo "  Stop everything:      ./dev-stop.sh --all"
+echo ""
+echo -e "${BLUE}📊 MONITORING${NC}"
+echo "────────────────────────────────────────────────"
+echo "  Check status:         ./dev-status.sh"
+echo "  View logs:            ./dev-logs.sh"
+echo ""
+echo -e "${BLUE}🐳 DOCKER${NC}"
+echo "────────────────────────────────────────────────"
+echo "  Start containers:     ./docker-up.sh"
+echo "  Stop containers:      ./docker-down.sh"
+echo "  View Docker logs:     ./docker-logs.sh"
+echo "  Restart containers:   ./docker-restart.sh"
+echo ""
+echo -e "${BLUE}🔗 URLS${NC}"
+echo "────────────────────────────────────────────────"
+echo -e "  Frontend:             ${GREEN}http://localhost:3000${NC}"
+echo -e "  Backend API:          ${GREEN}http://localhost:8000${NC}"
+echo -e "  API Docs (Swagger):   ${GREEN}http://localhost:8000/docs${NC}"
+echo -e "  Orthanc PACS:         ${GREEN}http://localhost:8043${NC}"
+echo ""
+echo -e "${BLUE}🗄️  DATABASE${NC}"
+echo "────────────────────────────────────────────────"
+echo "  Host:      localhost:5433"
+echo "  Database:  ehrdb"
+echo "  User:      ehruser"
+echo "  Password:  ehrpassword"
+echo ""
+echo "  Connect via psql:"
+echo "    docker exec -it ehr_postgres psql -U ehruser -d ehrdb"
+echo ""
+echo -e "${BLUE}👤 TEST USERS${NC}"
+echo "────────────────────────────────────────────────"
+echo "  admin        / Admin123!     (Admin)"
+echo "  dr_sharma    / Doctor123!    (Doctor)"
+echo "  nurse_priya  / Nurse123!     (Nurse)"
+echo ""
+echo -e "${BLUE}📁 MANUAL COMMANDS${NC}"
+echo "────────────────────────────────────────────────"
+echo "  Backend:"
+echo "    cd backend && source venv/bin/activate"
+echo "    uvicorn app.main:app --reload"
+echo ""
+echo "  Frontend:"
+echo "    cd frontend && npm run dev"
+echo ""
+echo "  Migrations:"
+echo "    cd backend && alembic upgrade head"
+echo "    cd backend && alembic revision --autogenerate -m \"message\""
+echo ""

@@ -1,0 +1,166 @@
+# EHR Application - Git Ignore File
+# Only necessary files will be pushed to GitHub
+# Excludes large generated files (venv, node_modules, etc.)
+
+# ============================================================================
+# Python / Backend
+# ============================================================================
+# Virtual environment
+venv/
+env/
+ENV/
+.venv
+*.egg-info/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Database files (local development)
+*.db
+*.sqlite
+*.sqlite3
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ============================================================================
+# Node.js / Frontend
+# ============================================================================
+# Dependencies
+node_modules/
+jspm_packages/
+
+# Build output
+dist/
+dist-ssr/
+build/
+.next/
+out/
+
+# Vite
+.vite/
+
+# Testing
+coverage/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ============================================================================
+# Docker
+# ============================================================================
+# Don't ignore Dockerfiles and docker-compose files - we need them!
+# But exclude runtime data
+
+# Docker volumes data (if mounted locally)
+docker/data/
+docker/volumes/
+
+# ============================================================================
+# IDE / Editors
+# ============================================================================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# ============================================================================
+# OS Files
+# ============================================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# ============================================================================
+# Temporary Files
+# ============================================================================
+*.tmp
+*.temp
+*.bak
+*.old
+.cache/
+
+# ============================================================================
+# Documentation build output (keep source docs)
+# ============================================================================
+docs/_build/
+site/
+
+# ============================================================================
+# Keep these important files (explicitly NOT ignored)
+# ============================================================================
+# !.gitignore
+# !Dockerfile
+# !docker-compose*.yml
+# !*.md
+# !requirements.txt
+# !package.json
+# !package-lock.json
+
+# ============================================================================
+# Summary of what IS included in GitHub:
+# ✅ Source code (backend/app/, frontend/src/)
+# ✅ Docker configs (Dockerfile, docker-compose.yml)
+# ✅ Dependencies (requirements.txt, package.json)
+# ✅ Documentation (docs/, *.md)
+# ✅ Configuration (config/, alembic.ini)
+# ✅ Deployment scripts (*.sh)
+#
+# ❌ NOT included (generated files):
+# ❌ venv/, node_modules/ (~500+ MB)
+# ❌ __pycache__/, dist/ (cache/build)
+# ❌ .env files (secrets)
+# ❌ logs/, *.db (runtime data)
+# ============================================================================

@@ -1,0 +1,140 @@
+/**
+ * Global Styles
+ * 
+ * Base styles and CSS resets for the EHR application.
+ * Component-specific styles should use Ant Design's token system
+ * or CSS-in-JS via the theme module.
+ */
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Root variables - matching theme tokens */
+:root {
+  --color-primary: #1677FF;
+  --color-success: #52C41A;
+  --color-warning: #FAAD14;
+  --color-error: #FF4D4F;
+  --color-text: #262626;
+  --color-text-secondary: #595959;
+  --color-background: #F5F5F5;
+  --color-white: #FFFFFF;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Body */
+body {
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Root element */
+#root {
+  min-height: 100vh;
+}
+
+/* Code */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #4096FF;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Ant Design overrides */
+.ant-layout-header {
+  line-height: 64px;
+  height: 64px;
+}
+
+/* Prevent text selection on sidebar menu */
+.ant-menu {
+  user-select: none;
+}
+
+/* Table improvements */
+.ant-table-wrapper {
+  background: var(--color-white);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Form label styling */
+.ant-form-item-label > label {
+  font-weight: 500;
+}
+
+/* Card hover effect */
+.ant-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Button focus ring */
+.ant-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Input focus */
+.ant-input:focus,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+}
+
+/* Smooth transitions */
+.ant-btn,
+.ant-input,
+.ant-select-selector,
+.ant-card {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Print styles */
+@media print {
+  .ant-layout-sider,
+  .ant-layout-header {
+    display: none !important;
+  }
+  
+  .ant-layout-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
