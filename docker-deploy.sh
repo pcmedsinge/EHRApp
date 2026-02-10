@@ -24,16 +24,16 @@ fi
 # Stop any running containers
 echo ""
 echo "📦 Stopping any existing containers..."
-docker-compose -f docker-compose.full.yml down
+docker-compose -f docker-compose.yml down
 
 # Build and start all services
 echo ""
 echo "🏗️  Building Docker images..."
-docker-compose -f docker-compose.full.yml build
+docker-compose -f docker-compose.yml build
 
 echo ""
 echo "🚀 Starting all services..."
-docker-compose -f docker-compose.full.yml up -d
+docker-compose -f docker-compose.yml up -d
 
 # Wait for services to be healthy
 echo ""
@@ -43,7 +43,7 @@ sleep 10
 # Check service status
 echo ""
 echo "📊 Service Status:"
-docker-compose -f docker-compose.full.yml ps
+docker-compose -f docker-compose.yml ps
 
 echo ""
 echo "=========================================="
@@ -58,8 +58,8 @@ echo "   OHIF Viewer:  http://localhost:3001"
 echo "   Orthanc:      http://localhost:8042 (orthanc/orthanc)"
 echo ""
 echo "📝 To view logs:"
-echo "   docker-compose -f docker-compose.full.yml logs -f [service-name]"
+echo "   docker-compose -f docker-compose.yml logs -f [service-name]"
 echo ""
 echo "🛑 To stop all services:"
-echo "   docker-compose -f docker-compose.full.yml down"
+echo "   docker-compose -f docker-compose.yml down"
 echo ""
